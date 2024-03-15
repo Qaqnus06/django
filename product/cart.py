@@ -44,6 +44,17 @@ class Cart:
                 if product.id==key:
                     total=total+(product.price*int(value))
         return total  
+    def get_product_price(self, product_id):
+        try:
+            product = Product.objects.get(id=product_id)
+            return product.price
+        except Product.DoesNotExist:
+            pass
+        
+
+
+
+
 
     def delete_product(self,product_id):
         product_id=str(product_id)
@@ -52,18 +63,32 @@ class Cart:
         self.session.modified=True    
 
 
-    def product_update(self,product,quantitiy):
-        product_id=str(product.id)
-        quantitiy=int(quantitiy)
-        if quantitiy==0:
+    # def product_update(self,product,quantitiy):
+    #     product_id=str(product.id)
+    #     quantitiy=int(quantitiy)
+    #     if quantitiy>1:
 
            
-            self.cart[product_id]=str(quantitiy)
-            self.session.modified=True  
+    #         self.cart[product_id]=str(quantitiy)
+    #         self.session.modified=True  
 
-            cart=self.cart
+    #         cart=self.cart
 
-        return cart   
+    #     return cart   
+
+    def product_update(self, product, quantity):
+            product_id = str(product.id)
+            quantity = int(quantity)
+
+            if quantity >=0:
+               
+
+                self.cart[product_id] = str(quantity)
+                self.session.modified = True
+                cart = self.cart
+
+                return cart
+
 
     def get_all_info(self):
         products=self.get_quantity()
