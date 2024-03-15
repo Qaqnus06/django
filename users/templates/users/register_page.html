@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div style="height:200px; text-align: center; margin-top: 20px; " class="container px-4 px-lg-5 ">
+    <div  class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justifity-content-center">
+       
+        <form action="" method="post">
+            {% csrf_token %}
+        
+            {{form.as_p}}
+
+            <button type="submit" class="btn btn-autoline-primary"> Register</button>
+        </form>
+    </div>   
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div style="height:200px; text-align: center; margin-top: 2px;background-image:-webkit-linear-gradient(); " class="container px-4 px-lg-5 ">
+    <div  style="height: 20px; width: 300px;">
+        <style>
+            .form-control{
+                text-transform: uppercase;
+                padding-top: 20px;
+                background-color: rgb(135, 208, 9);
+            }
+        </style>
+       
+        <form action="" method="post" enctype="multipart/form-data">
+            <img style="background-color: blue; border-radius: 50; height: 50px;" src="{% static 'users/olma.jpg' %}" alt="rasm bor">
+             {% csrf_token %}
+        
+<!--             
+            <div class="form-control">
+            <label for="image">Photo</label>
+            <input type="image" name="image" class="form-control" required="" id="image">
+            <label for="text">First name</label>
+            <input type="text" name="image" class="form-control" required="" id="text">
+            <label for="text">last name</label>
+            <input type="text" name="image" class="form-control" required="" id="text">
+            <label for="text">bio</label>
+            <input type="text" name="image" class="form-control btn btn-outline-primary" required="" id="text"> -->
+            
+            {{form.as_p}}
+            <button type="submit"class="form-control btn btn-outline-danger" > save</button>
+        </div>
+        </form>
+    </div>   
+</div>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block content %}
+{%  load static %}
+
+
+
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+           {% for product in products %}
+
+           {% for key,value in quantities.items %}
+           {% if key == product.id|slugify %}
+         
+
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{product.image.url}}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{product.name}}</h5>
+                      <p class="card-text"></p>
+                      <p class="card-text"><small class="text-body-secondary">Quantitiy: {{value}}</small></p>
+
+                      <div class="d-flex align-items-center"  >
+                         <label for="inputQuantity">Quantitiy</label>
+                         <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                        <button  class="btn btn-outline-primary" id="update-cart" data-index="{{product.id}}"> Update</button>
+
+
+                        </div> <hr style="color: blue;">
+
+                      
+                      <a  href="#" class="btn btn-outline-danger mt-4" id="delete_product" data-index="{{product.id}}">Delete</a>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
+            <h2 class="mt-3 text-center">Total:  ${{total}} &nbsp; <a href="#" class="btn btn-outline-warning fs-5 p-2"> Order</a></h2>
+        </div>
+    </div>
+</section>
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Zakaz qilmoqchimisiz</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in all_products %}
+            <tr>
+              <th scope="row">{{order.id}}</th>
+              <td>{{order.id}}</td>
+              <td>{{order.id}}</td>
+              <td>@{{order.id}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        
+            
+        
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+        <button type="button" class="btn btn-primary">Ha</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $(document).on('click','#delete_product',function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url:"{% url 'product:cart_delete' %}",
+            data:{
+                product_id: $(this).data('index'),
+                // product_quantity: $('#inputQuantity').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action:'post'
+            },
+            success:function(json){
+                console.log(json)
+                location.reload()
+            },
+            error:function (xhr,errmsg,err){
+
+            }
+        })
+
+    })
+</script>
+
+
+
+<script>
+  $(document).on('click','#update-cart',function(e){
+      e.preventDefault();
+      $.ajax({
+          type:'POST',
+          url:"{% url 'product:cart_update' %}",
+          data:{
+              product_id: $(this).data('index'),
+              product_quantity: $('#inputQuantity').val(),
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              action:'post'
+          },
+          success:function(json){
+              console.log(json)
+              location.reload()
+          },
+          error:function (xhr,errmsg,err){
+
+          }
+      })
+
+  })
+</script>
+
+
+{% endblock %}
