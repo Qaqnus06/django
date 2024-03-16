@@ -1,10 +1,13 @@
 from typing import Any
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django .views.generic import ListView,DetailView
-from .models import Product,Category
+from .models import Product,Category,Order,OrderItem
 from django.http import HttpResponse,JsonResponse
 from .cart import Cart
 from django .views import View
+from django .core.exceptions import ValidationError
+import uuid
+
 # Create your views here.
 # def index(request):
 #     return render(request,'product/index.html')
@@ -18,13 +21,15 @@ def cart_summary(request):
     products=cart.get_products()
     quantity=cart.get_quantity()
     total=cart.get_total_price()
+    all_orders=cart.get_all_info()
 
     
 
     data={  
         "products":products,
         "quantities":quantity,
-        'total':total
+        'all_orders':all_orders,
+        "total":total
         }
     return render(request,'product/cart_summary.html',context=data)
 def cart_add(request):
@@ -98,6 +103,17 @@ def about(request,id):
 
 
 
+def savatcham(request,id):
+    category=Category.objects.all()
+    product=get_object_or_404(Product,pk=id)
+    data={
+        'category':category,
+        'product':product
+    }
+    return render (request,'product/savatcham.html',context=data)
+
+
+
 class ProductDetailView(DetailView):
     model=Product
     template_name='product/detail.html'
@@ -116,5 +132,33 @@ class OrderView(View):
         total= cart.get_total_price() 
 
         #malumot omboriga saqlash
+        
+        order=Order()
+        order.order_id=uuid.uuid4()
+        order.total_price=total
 
+        order.user_id=request.user.id
+        order.save()
+        
+
+        try:
+            for item_data in all_orders:
+                    order_item=OrderItem()
+                    order_item.order=order
+                    order_item.product_id=item_data['id']
+                    order_item.price=item_data['price']
+                    order_item.name=item_data['name']
+                    order_item.quantitiy=item_data['quantitiy']
+                    order_item.save()
+        except:
+            cart.clear_cart()
+            return redirect('product:index')     
+
+               
+
+        
+
+
+
+        return redirect('product:index') 
         #telegram botga habar yuborish

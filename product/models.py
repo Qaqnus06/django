@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User,BaseModel
 from django .core.validators import FileExtensionValidator
+from users.models import User
 
 
 # Create your models here.
@@ -31,7 +32,8 @@ class Product(BaseModel):
 class  Order(models.Model):
     order_id=models.CharField(unique=True,max_length=50)
     order_date=models.DateField(auto_now_add=True)
-    total_price=models.DecimalField(max_digits=6,decimal_places=2)
+    total_price=models.IntegerField()
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
 
 
 class OrderItem(models.Model):
@@ -40,7 +42,8 @@ class OrderItem(models.Model):
     name=models.CharField(max_length=100)
     price=models.IntegerField()
     quantitiy=models.PositiveIntegerField()
-
+    def __str__(self):
+        return str(self.order.order_id)
 
     def __str__(self) :
         return f"{self.name} --Quantitiy {self.quantitiy}"

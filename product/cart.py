@@ -91,7 +91,7 @@ class Cart:
 
 
     def get_all_info(self):
-        products=self.get_quantity()
+        products=self.get_products ()
         # quantitiy=self.get_quantity()  
         # total=self.get_total_price()
         result=[]
@@ -104,6 +104,14 @@ class Cart:
                     "price":str(product.price),
                     "quantity":str(self.cart[str(product.id)]),
                     # "total":str(total)
-                }   
+                }  
+                result.append(data) 
 
-                return result
+        return result
+    
+
+    def clear_cart(self):
+        self.cart.clear()
+        self.session.modified=True
+
+        return True
